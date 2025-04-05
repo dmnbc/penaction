@@ -1,0 +1,21 @@
+# GitHub-Benutzername
+$username = "securilearn"
+
+# Anzahl der Repos pro Seite (max 100)
+$perPage = 100
+
+# API-Endpunkt
+$apiUrl = "https://api.github.com/users/$username/repos?per_page=$perPage"
+
+# Ziel-Datei
+$outputFile = "$username-repos.txt"
+
+# Web-Request ausführen
+$response = Invoke-RestMethod -Uri $apiUrl -Headers @{ "User-Agent" = "PowerShell" }
+
+# Repos extrahieren und in Datei schreiben
+"Öffentliche Repositories von $username :" | Out-File -FilePath $outputFile -Encoding UTF8
+$response | ForEach-Object { $_.html_url } | Out-File -FilePath $outputFile -Encoding UTF8 -Append
+
+# Ergebnis anzeigen
+Get-Content $outputFile
